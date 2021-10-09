@@ -1,0 +1,4 @@
+**/dev
+**/__pycache_
+.git
+.gitignore
