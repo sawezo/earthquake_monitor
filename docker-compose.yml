@@ -13,7 +13,7 @@ services:
         depends_on:
             - kafka
         environment:
-            - KAFKA_BROKER_URL=kafka:9093
+            - KAFKA_BROKER_URI=kafka:9093
 
     zookeeper:
         container_name: "zookeeper"
@@ -104,13 +104,10 @@ services:
             - ./backend/postgres/db:/var/lib/postgresql/data
             - ./backend/postgres/setup/bootstrap.sql:/docker-entrypoint-initdb.d/bootstrap.sql
 
-    airflow_scheduler:
-        container_name: "airflow_scheduler"
+    scheduler:
+        container_name: "scheduler"
         image: apache/airflow
         command: scheduler
-        deploy:
-            restart_policy:
-                condition: on-failure
         depends_on:
             - postgres_db
         environment:
@@ -121,24 +118,22 @@ services:
             - ./backend/airflow/logs:/opt/airflow/logs
             - *services-volume
     
-    airflow_webserver:
-        container_name: "airflow_webserver"
+    webserver:
+        container_name: "webserver"
         image: apache/airflow
-        deploy:
-            restart_policy:
-                condition: on-failure
+        entrypoint: /opt/airflow/src/webserver_entrypoint.sh
         depends_on:
             - postgres_db
-            - airflow_scheduler
+            - scheduler
         environment:
             - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres_db/${POSTGRES_DB}
             - AIRFLOW__CORE__EXECUTOR=LocalExecutor
         volumes:
             - ./backend/airflow/dags:/opt/airflow/dags
             - ./backend/airflow/logs:/opt/airflow/logs
+            - ./backend/airflow/src:/opt/airflow/src
         ports:
             - "8082:8080"
-
 
     flask-app:
         build: ./frontend/flask
@@ -180,12 +175,10 @@ services:
             - 8080:8888
         env_file:
             - .env
-
         depends_on:
             - postgres_db
             - mongo_db
 
-    
 
     # frontend: 
     #     container_name: "frontend"
@@ -194,19 +187,17 @@ services:
     #         - ./front_end:/front_end
     #     ports: 
             # - '5000:5000'
+        # environment:
+        #     KAFKA_BROKER_URI: kafka:9093
+        # depends_on:
+        #     - back_end
 
     # back_end:
     #     build: ./backend
     #     volumes:
     #         - ./backend:/backend
     #     environment:
-    #         KAFKA_BROKER_URL: kafka:9093
+    #         KAFKA_BROKER_URI: kafka:9093
     #     depends_on:
     #         - kafka
     #         # - mongo
-
-    # front_end:
-        # environment:
-        #     KAFKA_BROKER_URL: kafka:9093
-        # depends_on:
-        #     - back_end

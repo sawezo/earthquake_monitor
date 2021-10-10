@@ -36,7 +36,7 @@ dev = 0
 
 # def instantiate_topic(topic_name, group_name):
     # checking if this topic needs to be instantiated
-    # _ = Consumer(topic_name, group_name, KAFKA_BROKER_URL)
+    # _ = Consumer(topic_name, group_name, KAFKA_BROKER_URI)
     # if topic_name not in _.topics():
     #     # logging.info(Fore.GREEN+"instantiating topic"+Style.RESET_ALL)
     #     print("instantiating topic")
@@ -58,12 +58,12 @@ dev = 0
     # except:
     #     print("ERRRRR: Server not available")
 
-def run_minute_update(spider, topic, KAFKA_BROKER_URL):
+def run_minute_update(spider, topic, KAFKA_BROKER_URI):
     """
     call for data and publish to the kafka producer
     """
     data = spider.get("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson")
-    producer_ = Producer(topic, KAFKA_BROKER_URL)
+    producer_ = Producer(topic, KAFKA_BROKER_URI)
     
 
     # global dev
@@ -76,8 +76,8 @@ def run_minute_update(spider, topic, KAFKA_BROKER_URL):
 
 if __name__ == '__main__':
     topic = "quake"
-    KAFKA_BROKER_URL = os.environ.get("KAFKA_BROKER_URL") 
-    print(f"using broker URI: {KAFKA_BROKER_URL}")
+    KAFKA_BROKER_URI = os.environ.get("KAFKA_BROKER_URI") 
+    print(f"using broker URI: {KAFKA_BROKER_URI}")
 
     
 
@@ -89,5 +89,5 @@ if __name__ == '__main__':
     # spider = Caller()
     # schedule = BlockingScheduler()
     # ADD: change back to 60
-    # schedule.add_job(run_minute_update, "interval", args=[spider, topic, KAFKA_BROKER_URL], seconds=10, max_instances=2)
+    # schedule.add_job(run_minute_update, "interval", args=[spider, topic, KAFKA_BROKER_URI], seconds=10, max_instances=2)
     # schedule.start()

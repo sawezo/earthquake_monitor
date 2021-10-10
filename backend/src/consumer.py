@@ -3,20 +3,20 @@ from kafka import KafkaConsumer
 
 
 class Consumer:
-    def __init__(self, topic, group, KAFKA_BROKER_URL):
+    def __init__(self, topic, group, KAFKA_BROKER_URI):
         self.topic = topic
         self.group = group
         
         decoder_FUNC = lambda x: loads(x.decode('utf-8'))
 
 
-        print(f"consuming from URL: {KAFKA_BROKER_URL}")
+        print(f"consuming from URL: {KAFKA_BROKER_URI}")
         self._consumer = KafkaConsumer(self.topic, # topic name
                                         auto_offset_reset='earliest', # start reading at latest committed offset on break down/turn off
                                         enable_auto_commit=True, # commit offset every interval
                                         group_id=self.group, # consumer group id
                                         consumer_timeout_ms=1000,
-                                        bootstrap_servers=KAFKA_BROKER_URL,
+                                        bootstrap_servers=KAFKA_BROKER_URI,
                                         value_deserializer=decoder_FUNC) # decode the data
         self._consumer.subscribe(topic)
         self.message_stack = [] # in case data is not found on first call

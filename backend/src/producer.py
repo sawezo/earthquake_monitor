@@ -3,11 +3,11 @@ from kafka import KafkaProducer
 
 
 class Producer:
-    def __init__(self, topic, KAFKA_BROKER_URL):
+    def __init__(self, topic, KAFKA_BROKER_URI):
         self.topic = topic
 
         serialize_FUNC = lambda x: dumps(x).encode('utf-8') # how to serialize data before sending to broker
-        self.producer_ = KafkaProducer(bootstrap_servers=KAFKA_BROKER_URL, 
+        self.producer_ = KafkaProducer(bootstrap_servers=KAFKA_BROKER_URI, 
                                        api_version=(0, 10), 
                                        value_serializer=serialize_FUNC)
     
