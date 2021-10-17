@@ -11,11 +11,11 @@ docker volume prune
 
 
 # module
-sudo rm -r ./backend/mongo/db
-mkdir ./backend/mongo/db
+# sudo rm -r ./backend/mongo/db
+# mkdir ./backend/mongo/db
 
-sudo rm -r ./backend/postgres/db
-mkdir ./backend/postgres/db
+# sudo rm -r ./backend/postgres/db
+# mkdir ./backend/postgres/db
 
-sudo rm -r ./backend/airflow/logs/
-mkdir ./backend/airflow/logs/
+# sudo rm -r ./backend/airflow/logs/
+# mkdir ./backend/airflow/logs/

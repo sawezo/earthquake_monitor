@@ -1,0 +1,55 @@
+## FLOWCHART
+![data architecture flowchart](../docs/imgs/flowchart.png "Data Architecture Flowchart")
+
+
+#### Overview of program 
+
+### Overview of Technology Stack
+
+
+
+## Post
+## KAFKA
+Apache Kafka is a distributed streaming platform that:
+
+Lets you publish and subscribe to streams of records. In this respect it is similar to a message queue or enterprise messaging system.
+Lets you store streams of records in a fault-tolerant way.
+Lets you process streams of records as they occur.
+
+Every message that is feed into the system must be part of some topic. The topic is nothing but a stream of records. The messages are stored in key-value format. Each message is assigned a sequence, called Offset. The output of one message could be an input of the other for further processing.
+Producers
+Producers are the apps responsible to publish data into Kafka system. They publish data on the topic of their choice.
+Consumers
+The messages published into topics are then utilized by Consumers apps. A consumer gets subscribed to the topic of its choice and consumes data.
+
+Broker
+Every instance of Kafka that is responsible for message exchange is called a Broker. Kafka can be used as a stand-alone machine or a part of a cluster.
+I try to explain the whole thing with a simple example, there is a warehouse or godown of a restaurant where all the raw material is dumped like rice, vegetables etc. The restaurant serves different kinds of dishes: Chinese, Desi, Italian etc. The chefs of each cuisine can refer to the warehouse, pick the desire things and make things. There is a possibility that the stuff made by the raw material can later be used by all departments’ chefs, for instance, some secret sauce that is used in ALL kind of dishes. Here, the warehouse is a broker, vendors of goods are the producers, the goods and the secret sauce made by chefs are topics while chefs are consumers. 
+
+
+
+## KAPPA
+
+https://eng.uber.com/kappa-architecture-data-stream-processing/
+
+A streaming architecture is a defined set of technologies that work together to handle [stream processing](https://hazelcast.com/glossary/stream-processing/), which is the practice of taking action on a series of data at the time the data is created. In many modern deployments, Apache Kafka acts as the store for the streaming data, and then multiple stream processors can act on the data stored in Kafka to produce multiple outputs. Some streaming architectures include workflows for both stream processing and [batch processing](https://hazelcast.com/glossary/micro-batch-processing/), which either entails other technologies to handle large-scale batch processing, or using Kafka as the central store as specified in the Kappa Architecture.
+
+Leveraging a Lambda architecture allows engineers to reliably backfill a streaming pipeline*,* but it also requires maintaining two disparate codebases, one for batch and one for streaming. While the streaming pipeline runs in real time, the batch pipeline is scheduled at a delayed interval to reprocess data for the most accurate results. While a Lambda architecture provides many benefits, it also introduces the difficulty of having to reconcile business logic across streaming and batch codebases. 
+
+
+
+To counteract these limitations, Apache Kafka’s co-creator [Jay Kreps suggested using a Kappa architecture](https://www.oreilly.com/ideas/questioning-the-lambda-architecture) for stream processing systems**.** Kreps’ key idea was to replay data into a Kafka stream from a structured data source such as an Apache Hive table. This setup then simply reruns the streaming job on these replayed Kafka topics, achieving a unified codebase between both batch and streaming pipelines and production and backfill use cases.
+
+
+
+## FLOW
+
+https://lucid.app/pricing/lucidchart#/pricing
+
+https://app.diagrams.net/
+
+
+## TODO
+- make sure you update build.sh so that it doesn't break without env vars (test full project on other systems...)
+
+
