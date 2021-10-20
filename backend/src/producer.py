@@ -15,6 +15,7 @@ class Producer:
         while True:
             try:
                 self.producer_ = KafkaProducer(bootstrap_servers=self.KAFKA_BROKER_URI, 
+                                               api_version=(0, 10),
                                                value_serializer=self.serialize_FUNC)
                 print("Connected to Kafka", flush=True)
                 break
@@ -25,7 +26,8 @@ class Producer:
                 pass
 
     def report_success(self, record_metadata):
-        print("message produced")
+        # print("message produced")
+        pass
 
     def report_failure(self, exp):
         print('message failed: ', exp)

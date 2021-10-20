@@ -27,6 +27,9 @@ Every instance of Kafka that is responsible for message exchange is called a Bro
 I try to explain the whole thing with a simple example, there is a warehouse or godown of a restaurant where all the raw material is dumped like rice, vegetables etc. The restaurant serves different kinds of dishes: Chinese, Desi, Italian etc. The chefs of each cuisine can refer to the warehouse, pick the desire things and make things. There is a possibility that the stuff made by the raw material can later be used by all departments’ chefs, for instance, some secret sauce that is used in ALL kind of dishes. Here, the warehouse is a broker, vendors of goods are the producers, the goods and the secret sauce made by chefs are topics while chefs are consumers. 
 
 
+## FLINK 
+Note that Flink's metrics only report bytes and records and records communicated within the Flink cluster, and so will always report 0 bytes and 0 records received by sources, and 0 bytes and 0 records sent to sinks - so don't be confused that noting is reported as being read from Kafka, or written to Elasticsearch.
+
 
 ## KAPPA
 
@@ -42,14 +45,22 @@ To counteract these limitations, Apache Kafka’s co-creator [Jay Kreps suggeste
 
 
 
-## FLOW
+## model
+Running the example prints the input and output portions of the samples with the output values for the next time step rather than the current time step as we may desire for this type of problem.
+https://machinelearningmastery.com/how-to-use-the-timeseriesgenerator-for-time-series-forecasting-in-keras/
 
-https://lucid.app/pricing/lucidchart#/pricing
+For a stateful LSTM, the batch size should be chosen in a way, so that the number of samples is divisible by the batch size. See also here:
 
-https://app.diagrams.net/
+Keras: What if the size of data is not divisible by batch_size?
+
+In your case, considering that you take 20% from your training data as a validation set, you have 1136 samples remaining. So you should choose a batch size by which 1136 is divisible.
+
+Additionally, you could for example remove some samples or reuse samples to be able to choose various batch sizes.
+
+I do not use validation sets for time series forecasting, I don’t see a straightforward way to implement it.
+
+this is a multivariate, 1-step problem?
 
 
 ## TODO
 - make sure you update build.sh so that it doesn't break without env vars (test full project on other systems...)
-
-

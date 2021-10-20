@@ -28,12 +28,8 @@ RUN set -ex; \
   apt-get update; \
   apt-get -y install python3; \
   apt-get -y install python3-pip; \
-  # apt-get -y install python3; \
   ln -s /usr/bin/python3 /usr/bin/python; \
-#   ln -s /usr/bin/pip3 /usr/bin/pip; \
-#   apt-get update; \
-#   python -m pip install --upgrade pip; \
-  pip3 install apache-flink==1.13.2; \
+  pip3 install apache-flink==1.14.0; \
   pip3 install kafka-python;
 
 
