@@ -3,7 +3,7 @@ import geohash as gh
 from datetime import datetime
 
 
-def prepare_historical_data(MINIMUM_MAGNITUDE, COLS_TO_KEEP):
+def prepare_historical_data(min_magnitude, cols_to_keep):
     # data preparation
     df = pd.read_csv("../data/historical.csv")
 
@@ -27,17 +27,17 @@ def prepare_historical_data(MINIMUM_MAGNITUDE, COLS_TO_KEEP):
 
 
     # trim
-    df = df[df["Magnitude"]>=MINIMUM_MAGNITUDE]
-    df = df[COLS_TO_KEEP]
+    df = df[df["Magnitude"]>=min_magnitude]
+    df = df[cols_to_keep]
 
 
     # tidy
-    df.rename(dict(zip(COLS_TO_KEEP, ["longitude", "latitude", "magnitude"])), 
+    df.rename(dict(zip(cols_to_keep, ["longitude", "latitude", "magnitude"])), 
             axis=1, inplace=True)
 
 
     # geohashing
-    df["geohash"] = df.apply(lambda x: gh.encode(x["latitude"], x["longitude"], precision=2), axis = 1)
+    df["geohash"] = df.apply(lambda x: gh.encode(x["latitude"], x["longitude"], precision=2), axis=1)
     df.drop(["latitude", "longitude"], axis=1, inplace=True)
 
     # integer encode
@@ -47,4 +47,16 @@ def prepare_historical_data(MINIMUM_MAGNITUDE, COLS_TO_KEEP):
     CLASS_COUNT = df["geohash_idx"].nunique() # is number of unique classes
     df.reset_index(drop=True, inplace=True)
 
-    return df
+    return df, geohash_idx2hash
+
+def unpack_predictions(max_index_col, geohash_idx2hash):
+    """ 
+    decoding geohash predictions
+    """
+    lat__long = [gh.decode(geohash_idx2hash[e]) for e in max_index_col]
+    prediction_df = pd.DataFrame(lat__long, columns=["latitude", "longitude"]) # same order as expected in geohash encoding
+
+    prediction_df.drop_duplicates(inplace=True)
+    prediction_df.reset_index(drop=True)
+
+    return prediction_df

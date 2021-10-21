@@ -46,7 +46,7 @@ keep2rename = {'properties>mag':'magnitude',
 # schedule.start()
 
 if __name__=="__main__":    
-    # sleep(30) # waiting for other containers before setting runtime objects
+    sleep(30) # waiting for other containers before setting runtime objects
     
     # usgs
     spider = Puller()

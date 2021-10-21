@@ -17,8 +17,8 @@ docker exec mongo_db mongo admin ./setup/create-user.js -u $MONGO_ADMIN_USER -p 
 
 
 # starting the pyflink stream job
-# sleep 10
-# docker exec flink_job_manager ./bin/flink run -py /opt/jobs/pipeline.py
+sleep 10
+docker exec flink_job_manager ./bin/flink run -py /opt/jobs/pipeline.py
 
 
 # setup airflow  

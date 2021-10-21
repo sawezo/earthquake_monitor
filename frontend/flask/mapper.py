@@ -3,7 +3,6 @@ import folium
 
 
 def create_map(df):
-
     # create map
     m = folium.Map(location=(0,0), zoom_start=2)
 

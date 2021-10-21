@@ -39,8 +39,6 @@ A streaming architecture is a defined set of technologies that work together to 
 
 Leveraging a Lambda architecture allows engineers to reliably backfill a streaming pipeline*,* but it also requires maintaining two disparate codebases, one for batch and one for streaming. While the streaming pipeline runs in real time, the batch pipeline is scheduled at a delayed interval to reprocess data for the most accurate results. While a Lambda architecture provides many benefits, it also introduces the difficulty of having to reconcile business logic across streaming and batch codebases. 
 
-
-
 To counteract these limitations, Apache Kafka’s co-creator [Jay Kreps suggested using a Kappa architecture](https://www.oreilly.com/ideas/questioning-the-lambda-architecture) for stream processing systems**.** Kreps’ key idea was to replay data into a Kafka stream from a structured data source such as an Apache Hive table. This setup then simply reruns the streaming job on these replayed Kafka topics, achieving a unified codebase between both batch and streaming pipelines and production and backfill use cases.
 
 
@@ -60,6 +58,24 @@ Additionally, you could for example remove some samples or reuse samples to be a
 I do not use validation sets for time series forecasting, I don’t see a straightforward way to implement it.
 
 this is a multivariate, 1-step problem?
+
+One big difference between regular regression models and time series models is how we run predictions. The first one should be pretty obvious, we take the last 12 months of train data and predict it to get the first test data.
+How do we predict the next one?
+This is a big issue esp. if you take a shortcut and use the test data’s first value and use that as your last prediction. That way you are feeding the correct values for the prior steps helping the model to create better results that it would otherwise give.
+What needs to happen is that the “first prediction” needs to be added to the last 11 training data to create a new set of 12 data points to predict the next one. This way we are not cheating at all, the test data is really test data and is never seen by the model.
+
+this post wasn't worth saving tho...
+
+Assuming that the algorithms have a hard time to interpret GPS coordinates, the system
+could instead use encoded positions. This approach would take a latitude and longitude position and with a defined precision hash it and save it in a dictionary. This precision would
+be the amount of decimals for the latitude and longitude to use. This would discretize the
+operating area into a grid where the interval depends on the chosen precision.
+The drawback of this approach is with higher precision and operating area, the exponentially more locations have to hashed and stored. A small area of radius ten kilometre and
+4 decimal precision could yield well over 300000 locations and therefore outcomes. Another
+drawback is that the algorithm can only use positions it have trained on.
+
+
+need to 1-hjot encode since no ordinal relation exists
 
 
 ## TODO

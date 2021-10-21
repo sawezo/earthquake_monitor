@@ -17,4 +17,4 @@ RUN conda env create -f environment.yml
 SHELL ["conda", "run", "-n", "quake_backend", "/bin/bash", "-c"]
 
 # running the application
-ENTRYPOINT ["conda", "run", "-n", "quake_backend", "python", "-u", "./main.py"]
+ENTRYPOINT ["conda", "run", "-n", "quake_backend", "python", "/src/main.py"]
