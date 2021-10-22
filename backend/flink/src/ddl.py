@@ -30,8 +30,7 @@ create_postgres_sink_ddl = f"""
         CREATE TABLE quake_sink (
             magnitude DOUBLE,
             longitude DOUBLE,
-            latitude DOUBLE,
-            timestamp TIMESTAMPT DEFAULT Now() 
+            latitude DOUBLE
         ) WITH (
             'connector'= 'jdbc',
             'url' = 'jdbc:postgresql://postgres_db:5432/{POSTGRES_DB}',

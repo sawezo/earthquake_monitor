@@ -1,4 +1,4 @@
-FROM python:3.9.2-alpine
+FROM python:3.6-alpine
 
 # upgrade pip
 RUN pip install --upgrade pip
@@ -24,7 +24,12 @@ ENV VIRTUAL_ENV=/home/app/venv
 RUN python -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 RUN export FLASK_APP=app.py
-RUN pip install -r requirements.txt
+RUN pip3 install Flask; \
+    pip3 install gunicorn; \
+    pip3 install apscheduler==3.7.0; \
+    pip3 install Flask-APScheduler==1.12.2; \
+    pip3 install folium; \
+
 
 # define the port number the container should expose
 EXPOSE 5000

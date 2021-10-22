@@ -8,81 +8,81 @@ x-services-volume:
 
 services: 
 
-    zookeeper:
-        container_name: "zookeeper"
-        image: wurstmeister/zookeeper:3.4.6
-        ports:
-            - 2181:2181
+    # zookeeper:
+    #     container_name: "zookeeper"
+    #     image: wurstmeister/zookeeper:3.4.6
+    #     ports:
+    #         - 2181:2181
     
-    kafka:
-        container_name: "kafka"
-        image: wurstmeister/kafka:2.12-2.2.1
-        ports:
-            - "9092:9092"
-        expose:
-            - "9093"
-        environment:
-            KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
-            KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
-            KAFKA_LISTENERS: INSIDE://${KAFKA_BROKER_URI}
-            KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-        volumes:
-            - /var/run/docker.sock:/var/run/docker.sock                      
-        depends_on:
-            - zookeeper
+    # kafka:
+    #     container_name: "kafka"
+    #     image: wurstmeister/kafka:2.12-2.2.1
+    #     ports:
+    #         - "9092:9092"
+    #     expose:
+    #         - "9093"
+    #     environment:
+    #         KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+    #         KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+    #         KAFKA_LISTENERS: INSIDE://${KAFKA_BROKER_URI}
+    #         KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    #     volumes:
+    #         - /var/run/docker.sock:/var/run/docker.sock                      
+    #     depends_on:
+    #         - zookeeper
 
-    mongo_db:
-        container_name: "mongo_db"
-        image: mongo:latest
-        ports:
-            - "29017:27017"
-        command: --auth
-        environment:
-            - MONGO_ADMIN_USER=${MONGO_ADMIN_USER}
-            - MONGO_ADMIN_PASSWORD=${MONGO_ADMIN_PASSWORD}
-            - MONGO_USER=${MONGO_USER}
-            - MONGO_PASSWORD=${MONGO_PASSWORD}
-        volumes:
-            - ./backend/mongo/setup:/setup
-            - ./backend/mongo/db:/data/db
+    # mongo_db:
+    #     container_name: "mongo_db"
+    #     image: mongo:latest
+    #     ports:
+    #         - "29017:27017"
+    #     command: --auth
+    #     environment:
+    #         - MONGO_ADMIN_USER=${MONGO_ADMIN_USER}
+    #         - MONGO_ADMIN_PASSWORD=${MONGO_ADMIN_PASSWORD}
+    #         - MONGO_USER=${MONGO_USER}
+    #         - MONGO_PASSWORD=${MONGO_PASSWORD}
+    #     volumes:
+    #         - ./backend/mongo/setup:/setup
+    #         - ./backend/mongo/db:/data/db
 
-    jobmanager:
-        container_name: "flink_job_manager"
-        build: ./backend/flink/
-        image: pyflink/playgrounds:1.13.0-rc2
-        hostname: "jobmanager"
-        volumes:
-            - ./backend/flink/src:/opt/jobs
-        expose:
-            - "6123"
-        ports:
-            - "8081:8081"
-        command: jobmanager
-        environment:
-            - JOB_MANAGER_RPC_ADDRESS=jobmanager
-            - POSTGRES_USER=${POSTGRES_USER}
-            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-            - POSTGRES_DB=${POSTGRES_DB}
-            - KAFKA_BROKER_URI=${KAFKA_BROKER_URI}
-            - TOPIC=${TOPIC}
-            - GROUP=${GROUP}
+    # jobmanager:
+    #     container_name: "flink_job_manager"
+    #     build: ./backend/flink/
+    #     image: pyflink/playgrounds:1.13.0-rc2
+    #     hostname: "jobmanager"
+    #     volumes:
+    #         - ./backend/flink/src:/opt/jobs
+    #     expose:
+    #         - "6123"
+    #     ports:
+    #         - "8081:8081"
+    #     command: jobmanager
+    #     environment:
+    #         - JOB_MANAGER_RPC_ADDRESS=jobmanager
+    #         - POSTGRES_USER=${POSTGRES_USER}
+    #         - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    #         - POSTGRES_DB=${POSTGRES_DB}
+    #         - KAFKA_BROKER_URI=${KAFKA_BROKER_URI}
+    #         - TOPIC=${TOPIC}
+    #         - GROUP=${GROUP}
               
-    taskmanager:
-        container_name: "flink_task_manager"
-        image: pyflink/playgrounds:1.13.0-rc2
-        volumes:
-            - ./backend/flink/src:/opt/jobs
-        expose:
-            - "6121"
-            - "6122"
-        depends_on:
-            - jobmanager
-        command: taskmanager
-        links:
-            - jobmanager:jobmanager
-        environment:
-            - JOB_MANAGER_RPC_ADDRESS=jobmanager
-            - TASK_MANAGER_NUMBER_OF_TASK_SLOTS=20
+    # taskmanager:
+    #     container_name: "flink_task_manager"
+    #     image: pyflink/playgrounds:1.13.0-rc2
+    #     volumes:
+    #         - ./backend/flink/src:/opt/jobs
+    #     expose:
+    #         - "6121"
+    #         - "6122"
+    #     depends_on:
+    #         - jobmanager
+    #     command: taskmanager
+    #     links:
+    #         - jobmanager:jobmanager
+    #     environment:
+    #         - JOB_MANAGER_RPC_ADDRESS=jobmanager
+    #         - TASK_MANAGER_NUMBER_OF_TASK_SLOTS=20
 
     postgres_db:
         container_name: "postgres_db"
@@ -100,80 +100,63 @@ services:
             - ./backend/postgres/db:/var/lib/postgresql/data
             - ./backend/postgres/setup/bootstrap.sql:/docker-entrypoint-initdb.d/bootstrap.sql
 
-    backend:
-        container_name: "backend"
-        build: ./backend/src
+    # backend:
+    #     container_name: "backend"
+    #     build: ./backend/src
+    #     volumes:
+    #         - ./backend/src:/src
+    #     depends_on: 
+    #         - kafka
+    #         - taskmanager
+    #         - mongo_db
+    #         - postgres_db
+    #     environment:
+            # - KAFKA_BROKER_URI=${KAFKA_BROKER_URI}
+            # - TOPIC=${TOPIC}
+            # - GROUP=${GROUP}
+            # - MONGO_USER=${MONGO_USER}
+            # - MONGO_PASSWORD=${MONGO_PASSWORD}
+
+    flask-app:
+        container_name: "flask-app"
+        build: ./frontend/flask
+        restart: always
         volumes:
-            - ./backend/src:/src
+            - ./frontend/flask:/src
         depends_on: 
-            - kafka
-            - taskmanager
-            - mongo_db
             - postgres_db
+        ports: 
+            - '8000:8000'
         environment:
-            - KAFKA_BROKER_URI=${KAFKA_BROKER_URI}
-            - TOPIC=${TOPIC}
-            - GROUP=${GROUP}
-            - MONGO_USER=${MONGO_USER}
-            - MONGO_PASSWORD=${MONGO_PASSWORD}
-
-    # flask-app:
-    #     build: ./frontend/flask
-    #     restart: always
-    #     volumes:
-    #         - ./frontend/flask:/src
-    #     ports: 
-    #         - '8000:8000'
-    #     healthcheck:
-    #         test: ["CMD-SHELL", "curl --silent --fail localhost:8000/flask-health-check || exit 1"]
-    #         interval: 10s
-    #         timeout: 10s
-    #         retries: 10
-    #     command: gunicorn -w 3 -t 60 -b 0.0.0.0:8000 app:app
+            - POSTGRES_DB=${POSTGRES_DB}
+            - POSTGRES_USER=${POSTGRES_USER}
+            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+        healthcheck:
+            test: ["CMD-SHELL", "curl --silent --fail localhost:8000/flask-health-check || exit 1"]
+            interval: 10s
+            timeout: 10s
+            retries: 10
+        command: gunicorn -w 3 -t 60 -b 0.0.0.0:8000 app:app
             
-    # nginx-proxy:
-    #     build: ./frontend/nginx
-    #     restart: always
-    #     volumes:
-    #         - ./frontend/nginx/default.conf:/tmp/default.conf
-    #     environment: 
-    #         - FLASK_SERVER_ADDR=flask-app:8000
-    #     ports:
-    #         - "80:80"
-    #     depends_on:
-    #         - flask-app
-    #     healthcheck:
-    #         test: ["CMD-SHELL", "curl --silent --fail localhost:80/health-check || exit 1"]
-    #         interval: 10s
-    #         timeout: 10s
-    #         retries: 3
-    #     command: /app/start.sh
-
-    dev:
-        container_name: "dev"
-        image: jupyter/datascience-notebook
+    nginx-proxy:
+        container_name: "nginx"
+        build: ./frontend/nginx
+        restart: always
         volumes:
-            - ./notebooks:/home/jovyan/work
+            - ./frontend/nginx/default.conf:/tmp/default.conf
+        environment: 
+            - FLASK_SERVER_ADDR=flask-app:8000
         ports:
-            - 8080:8888
-        env_file:
-            - .env
+            - "80:80"
         depends_on:
             - postgres_db
-            - mongo_db
-
-    # frontend: 
-    #     container_name: "frontend"
-    #     build: frontend/app 
-    #     volumes:
-    #         - ./front_end:/front_end
-    #     ports: 
-            # - '5000:5000'
-        # environment:
-        #     KAFKA_BROKER_URI: kafka:9093
-        # depends_on:
-        #     - back_end
-
+            - flask-app
+        healthcheck:
+            test: ["CMD-SHELL", "curl --silent --fail localhost:80/health-check || exit 1"]
+            interval: 10s
+            timeout: 10s
+            retries: 3
+        command: /app/start.sh
             
     # scheduler:
     #     container_name: "scheduler"
@@ -205,3 +188,17 @@ services:
     #         - ./backend/airflow/src:/opt/airflow/src
     #     ports:
     #         - "8082:8080"
+
+
+    # dev:
+    #     container_name: "dev"
+    #     image: jupyter/datascience-notebook
+    #     volumes:
+    #         - ./notebooks:/home/jovyan/work
+    #     ports:
+    #         - 8080:8888
+    #     env_file:
+    #         - .env
+    #     depends_on:
+    #         - postgres_db
+    #         - mongo_db
